@@ -9,21 +9,31 @@
       box-sizing: border-box;
     }
 
+    body{
+      background-image: linear-gradient(to bottom right, purple, black);
+      background-attachment: fixed;
+    }
+
     div.ia21-player {
       display: flex;
       flex-direction: column;
       border: 1px solid black;
-      width: 200px;
+      width: 80rem;
+      margin: auto;
+      margin-top: 6em;
+      background-color: white
     }
 
     div.ia21-player video {
       width: 100%;
+    
     }
 
     div.ia21-player div.controllers {
       display: flex;
       border-top: 1px solid black;
       column-gap: 10px;
+      padding-right: 1rem;
     }
 
     div.ia21-player div.controllers button.play-pause {
@@ -31,6 +41,8 @@
       border: 0 none;
       border-right: 1px solid black;
       cursor: pointer;
+      height: 3em;
+      width: 3.5em;
     }
 
     div.ia21-player div.controllers div.dragbar {
@@ -69,8 +81,10 @@
       <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
     </video>
     <div class="controllers">
-      <button class="play-pause" data-pause-icon="⏸" data-play-icon="▶">
-        ▶
+      <button class="play-pause">
+        <svg id="amongus_potion">
+          <path class="ytp-svg-fill" d="M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z"></path>
+        </svg>
       </button>
       <div class="dragbar timeline">
         <div class="draggable"></div>
@@ -85,26 +99,7 @@
   </div>
 
 
-  <div class="ia21-player">
-    <video>
-      <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
-      <source src="https://www.w3schools.com/html/movie.ogg" type="video/ogg">
-    </video>
-    <div class="controllers">
-      <button class="play-pause" data-pause-icon="⏸" data-play-icon="▶">
-        ▶
-      </button>
-      <div class="dragbar timeline">
-        <div class="draggable"></div>
-      </div>
-      <div class="timer">
-        00:00
-      </div>
-      <div class="dragbar volume">
-        <div class="draggable"></div>
-      </div>
-    </div>
-  </div>
+ 
 
   <script>
     const containers = document.querySelectorAll("div.ia21-player")
@@ -115,22 +110,33 @@
       const timeline = container.querySelector(".dragbar.timeline")
       const timelineDrag = timeline.querySelector(".draggable")
       const timer = container.querySelector(".timer")
+      const svgElement = document.getElementById('amongus_potion');
+      const pathElement = svgElement.querySelector('.ytp-svg-fill');
 
       btPlayPause.addEventListener("click", () => {
         if (video.paused) {
           video.play()
-          btPlayPause.innerText = btPlayPause.dataset.pauseIcon
+          pathElement.setAttribute('d', 'M 12,26 16,26 16,10 12,10 z M 21,26 25,26 25,10 21,10 z');
           return
         }
-
+        
         video.pause()
-        btPlayPause.innerText = btPlayPause.dataset.playIcon
+        pathElement.setAttribute('d', 'M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z');
       })
 
       video.addEventListener("timeupdate", () => {
         const percent = (video.currentTime / video.duration) * 100
         timelineDrag.style.setProperty("--percent", `${percent}%`)
-        timer.innerText = Math.floor(video.currentTime)
+        
+      const s = Math.floor(video.currentTime)
+      const m = Math.floor(s / 60)
+      const h = Math.floor(m / 60)
+      const sh = `${h % 60}`.padStart(2, "0")
+      const sm = `${m % 60}`.padStart(2, "0")
+      const ss = `${s % 60}`.padStart(2, "0")
+      timelineDrag.style.setProperty("--percent", `${percent}%`)
+      timer.innerText = `${sh}:${sm}:${ss}`
+
       })
 
       // ---✀------------------------------------------------------
